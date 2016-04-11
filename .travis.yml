@@ -1,0 +1,11 @@
+language: java
+jdk:
+  - oraclejdk8
+services:
+  - mysql
+before_install:
+  - pip install --user codecov
+  - mysql -e "create database IF NOT EXISTS biometric_idp; grant all on biometric_idp.* to 'root';" -uroot
+after_success:
+  - codecov
+

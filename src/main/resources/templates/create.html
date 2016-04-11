@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+  <title th:text="#{welcome.title}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="l-mini">
+    <div class="mod-createclient">
+
+      <h1 th:text="#{create.title}"></h1>
+
+      <div class="createclient-container">
+        <form name="add-service-provider" th:action="${oauthSettings.newClient ? '/create' : '/edit'}" th:object="${oauthSettings}" method="post">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+          <div class="fields">
+            <div th:include="forms :: textfield(fieldName=consumerKey, tip=na, readonly=__${!oauthSettings.newClient}__)"/>
+            <div th:if="${oauthSettings.newClient}" th:include="forms :: textfield(fieldName=secret, tip=secretTip, readonly=true)"/>
+            <div th:include="forms :: textfield(fieldName=callbackUrl, tip=na, readonly=false)"/>
+
+            <div>
+              <label th:for="scopes" th:text="#{create.form.scopes}"></label>
+              <em class="tip">Press &lt;enter&gt; to add a scope. A client can have multiple scopes.</em>
+
+              <div>
+                <ul th:if="${#fields.hasErrors('scopes')}">
+                  <li class="field-error" th:each="err : ${#fields.errors('scopes')}" th:text="${err}"/>
+                </ul>
+                <div>
+                  <span th:each="scope: ${oauthSettings.scopes}" class="tag c-button"
+                        th:attr="data-value=${scope.value}">
+                    <span th:text="${scope.value}">tst</span><a href="#">x</a></span>
+                  <input type="text" id="scope-name" class="large"/>
+                </div>
+                <select th:field="*{scopes}" multiple="multiple" class="hidden">
+                  <option th:each="scope: ${oauthSettings.scopes}" th:value="${{scope.value}}" th:text="${scope.value}">
+                    foo
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label th:for="autoApprove" th:text="#{create.form.autoApprove}"></label>
+            <div>
+              <input type="checkbox" th:field="*{autoApprove}"/>
+            </div>
+          </div>
+          <div>
+            <label th:for="resourceServer" th:text="#{create.form.resourceServer}"></label>
+            <div>
+              <input type="checkbox" th:field="*{resourceServer}"/>
+            </div>
+          </div>
+          <div>
+            <label th:for="clientCredentialsAllowed" th:text="#{create.form.clientCredentialsAllowed}"></label>
+            <div>
+              <input type="checkbox" th:field="*{clientCredentialsAllowed}"/>
+            </div>
+          </div>
+          <div class="buttons">
+            <a href="/" class="c-button">Cancel</a>
+            <input name="create-client" type="submit" class="c-button" value="Save"/>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
