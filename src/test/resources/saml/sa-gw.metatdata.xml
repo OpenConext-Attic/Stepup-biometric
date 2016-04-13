@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     entityID="https://sa-gw.test.surfconext.nl/gssp/tiqr/metadata"
+                     ID="pfx0be464db-bf61-3ccc-ae28-382060714713">
+  <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <ds:Reference URI="#pfx0be464db-bf61-3ccc-ae28-382060714713">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>J57XtfWAx3TogEgc1FHRvzccQvjVlfbt+ZUbViiXzlI=</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>
+      SR2H1Z3lzOfVftICkIIlrdpID4x0Zw1Lh58ciBmS2VcdxtHN+eWORs37BQEUPi9iyDbnJkimAt3ibcztdkNEWSsyiUyltP7B3DKmkzOv+S8gWRHjzDoysT83jrdjvM6n81kuix4TyXzCIfY/BuU/8qU2eyuox1Nbxg7+KBJYONpWprzATvpyfj9+r5rD/BYRLjlX+I63mDYlRbqzEYHbX9CtqwWmekcURxHNhenIu6E/3Ek1hGLSsg/tcp16st6Knc2sb5xz65uFvT0229gFDeZUN1pAKl7QICaLzQdhpRZKJ3LMuSvAOiy81IH9BAFibSFLdu3D8nDl5hE4wErsOw==
+    </ds:SignatureValue>
+    <ds:KeyInfo>
+      <ds:X509Data>
+        <ds:X509Certificate>
+          MIICsjCCAZoCCQDRkLk4+C7hzDANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDDBBnYXRld2F5X3RpcXJfaWRwMB4XDTE1MDYxMzE2MjUyOVoXDTIwMDYxMTE2MjUyOVowGzEZMBcGA1UEAwwQZ2F0ZXdheV90aXFyX2lkcDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANW095An2azUbBEWAVf+NGC/4jNfb3fVUNyaGA422H+tsyk7sqjX9xdRcifGlFKP8lpa2Ud6gC0FHgRHED+5eRPn8ctYtXe+HW8Cs7DV3Zrj5/aHpo5O1F0czzHFvGe5MlbQr5RS5VO8daAZFoQ4CH75RF6nFAxh/tETKeREmxfsjVvb/FweRfbKaRORERYydGgAJq7I42lmCtQZrDsANbaQdnNFyYyGCgeAgdK60NsLP8YAM7toEA8+ysog5FnkV+O7Ow0Zgd4X32eGSgdcozEUeMUBYsf3feHkbeP7CYYd7OARaTyCPnpV6s7PfMyZW4mcwWDM+voT++Ad5pS3dAECAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAUorFAIS7b7BS5raxSAE7Ys3P8GDPQI1fRdx2nVOtxFcXgDPFz5O1RzStyS6iFelj+aFxTF6ZT83Yfo7uTWSfb6ZG7ONjGzbSgA7QXbhsUYPyoDdLxozzq+XL+Uqhg0e9CiJ86niGN5/CQb8nOeKKE2MfMhkEn48ewQp82Xv6x+rxhOtUDtcAsuj0045W2aiIGsUZf66spSXKbs01BGBzISHx4pem/Me3Iff5bQOoKjQEgLKhKRjLkk8voiwb5h4R809odlD1XhypFCSDAgCfIbiZ8+adDjkmMNe23Ynctrd0PKMVMTpFejlCUEQv0hfqEnwVrNi0l24Xz4lcxChQLg==
+        </ds:X509Certificate>
+      </ds:X509Data>
+    </ds:KeyInfo>
+  </ds:Signature>
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" use="signing">
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <ds:X509Certificate>
+            MIICsjCCAZoCCQDRkLk4+C7hzDANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDDBBnYXRld2F5X3RpcXJfaWRwMB4XDTE1MDYxMzE2MjUyOVoXDTIwMDYxMTE2MjUyOVowGzEZMBcGA1UEAwwQZ2F0ZXdheV90aXFyX2lkcDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANW095An2azUbBEWAVf+NGC/4jNfb3fVUNyaGA422H+tsyk7sqjX9xdRcifGlFKP8lpa2Ud6gC0FHgRHED+5eRPn8ctYtXe+HW8Cs7DV3Zrj5/aHpo5O1F0czzHFvGe5MlbQr5RS5VO8daAZFoQ4CH75RF6nFAxh/tETKeREmxfsjVvb/FweRfbKaRORERYydGgAJq7I42lmCtQZrDsANbaQdnNFyYyGCgeAgdK60NsLP8YAM7toEA8+ysog5FnkV+O7Ow0Zgd4X32eGSgdcozEUeMUBYsf3feHkbeP7CYYd7OARaTyCPnpV6s7PfMyZW4mcwWDM+voT++Ad5pS3dAECAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAUorFAIS7b7BS5raxSAE7Ys3P8GDPQI1fRdx2nVOtxFcXgDPFz5O1RzStyS6iFelj+aFxTF6ZT83Yfo7uTWSfb6ZG7ONjGzbSgA7QXbhsUYPyoDdLxozzq+XL+Uqhg0e9CiJ86niGN5/CQb8nOeKKE2MfMhkEn48ewQp82Xv6x+rxhOtUDtcAsuj0045W2aiIGsUZf66spSXKbs01BGBzISHx4pem/Me3Iff5bQOoKjQEgLKhKRjLkk8voiwb5h4R809odlD1XhypFCSDAgCfIbiZ8+adDjkmMNe23Ynctrd0PKMVMTpFejlCUEQv0hfqEnwVrNi0l24Xz4lcxChQLg==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                            Location="https://sa-gw.test.surfconext.nl/gssp/tiqr/single-sign-on"/>
+  </md:IDPSSODescriptor>
+  <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                 Location="https://sa-gw.test.surfconext.nl/gssp/tiqr/consume-assertion" index="0"/>
+  </md:SPSSODescriptor>
+</md:EntityDescriptor>

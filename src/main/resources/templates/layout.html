@@ -3,37 +3,18 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
-  <title>Layout</title>
-  <meta content='width=1280' id='vp' name='viewport'/>
-  <meta charset='utf-8'/>
-  <link href="/css/application.css" th:href="@{/css/main.css}" media="screen" rel="stylesheet"/>
-  <script type="text/javascript" th:src="@{/js/jquery-2.2.3.min.js}"></script>
-  <script type="text/javascript" th:src="@{/js/biometric.js}"></script>
+    <title>Layout</title>
+    <meta charset='utf-8'/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<div class="l-header">
-  <div class="mod-header">
-    <h1 class="title"><a href="/" th:href="@{/}">Biometric IdP</a></h1>
-
-  </div>
+<div layout:fragment="content">
 </div>
-<div class="l-main">
-  <div class="mod-flash">
-    <div class="flash-notice" th:classappend="${#vars['flash.notice'] == null} ? 'hidden'">
-      <a class="close" href="#">X</a>
-      <span th:text="${#vars['flash.notice']}">flash text</span>
-    </div>
-  </div>
-  <div layout:fragment="content">
-  </div>
-</div>
-<div class="mod-footer">
-  <ul data-reactid=".0.2.0">
-    <li><a href="http://www.surfnet.nl/en" target="_blank">SURFnet</a></li>
-    <li><a href="https://wiki.surfnet.nl/display/conextsupport/Terms+of+Service+%28EN%29"
-           target="_blank">Terms of Service</a></li>
-    <li><a href="mailto:help@surfconext.nl">help@surfconext.nl</a></li>
-  </ul>
-</div>
+<script type="text/javascript" th:src="@{/js/jquery-2.2.3.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.pietimer.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/biometric.js}"></script>
 </body>
 </html>

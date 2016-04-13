@@ -3,11 +3,62 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout">
 <head>
-    <title th:text="#{welcome.title}"></title>
+    <title th:text="#{biometric.title}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div>User information</div>
+    <div class="container">
+
+        <input type="hidden" name="locale" th:value="__${#locale}__"/>
+
+        <div class="content">
+            <div class="page-header clearfix">
+                <img class="logo pull-left" th:src="@{/images/logo.png}"/>
+                <img class="logo pull-right" th:src="@{/images/logo@2x.png}"/>
+            </div>
+
+            <div class='pull-right'>
+                <ul class="language">
+                    <li><a th:class="__${#locale}__ == 'en' ? 'active' : ''" href="/?lang=en">EN</a></li>
+                    <li><a th:class="__${#locale}__ == 'nl' ? 'active' : ''" href="/?lang=nl">NL</a></li>
+                </ul>
+            </div>
+            <div id="status">
+                <h3 th:if="${authentication.registration}" th:text="#{biometric.registration}">Register new BioMetric
+                    account</h3>
+                <h3 th:if="${!authentication.registration}" th:text="#{biometric.authentication}">Authenticate your
+                    BioMetric account</h3>
+
+
+                <ul class="instructions">
+                    <li th:text="#{biometric.open_app}"></li>
+                    <li th:text="#{biometric.scan_code}"></li>
+                </ul>
+            </div>
+            <img class="qr" th:src="@{'data:image/jpeg;base64,'+${authentication.biometricReponse.qrCode}}"/>
+
+
+            <p th:utext="#{biometric.download}"></p>
+
+            <div id="countdown"></div>
+
+            <p th:if="${authentication.registration}" th:text="#{biometric.time.registration}">Time left</p>
+            <p th:if="${!authentication.registration}" th:text="#{biometric.time.authentication}">Time left</p>
+        </div>
+
+        <footer>
+            <div class="row-fluid">
+                <div class="span8 offset2">
+                    <hr/>
+                    <ul class="nav nav-pills">
+                        <li><a th:href="${sa_home}" href="#">Cancel</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+
+
+    </div>
 </div>
 </body>
 </html>
