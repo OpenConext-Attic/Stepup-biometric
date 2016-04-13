@@ -1,4 +1,5 @@
 var currentLocale = $('input[name=locale]').val();
+
 var biometricTranslations = {
   'en': {
     'expired': '<p>Your Biometric session has expired.</p><p>Refresh the page for a new QR code or cancel the operation to return to the Strong Authentication overview.</p>',
@@ -18,6 +19,7 @@ $('#countdown').pietimer({
   },
   function () {
   });
+
 $('#countdown').pietimer('start');
 
 $.ajaxSetup({
@@ -32,7 +34,9 @@ function pollStatus() {
         break;
       case 'complete':
         $('#status').html(biometricTranslations[currentLocale][status]);
-        $.post('/done');
+        window.setTimeout(function () {
+          $.post('/done');
+        }, 1000)
         break;
       case 'expired' :
         $('#status').html(biometricTranslations[currentLocale][status]);
