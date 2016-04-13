@@ -42,5 +42,13 @@ public interface BioMetric {
     public String getUuid() {
       return uuid;
     }
+
+    @Override
+    public String toString() {
+      return "Response{" +
+          "uuid='" + uuid + '\'' +
+          ", expirationTime='" + expirationTime + '\'' +
+          '}';
+    }
   }
 }

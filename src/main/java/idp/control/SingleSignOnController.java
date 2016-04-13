@@ -45,7 +45,6 @@ public class SingleSignOnController {
     Map<String, Object> model = new HashMap<>();
     model.put("authentication", authentication);
     model.put("sa_home", strongAuthenticationHome);
-    model.put("timer", new BiometricCountDown());
     return new ModelAndView("singleSignOn", model);
   }
 
@@ -53,7 +52,7 @@ public class SingleSignOnController {
   public void authnResponder(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws IOException {
     SAMLAuthenticationToken token = (SAMLAuthenticationToken) authentication;
     if (!token.getStatus().equals(BioMetric.PollResponse.complete)) {
-      throw new IllegalArgumentException("Do not cheat...");
+      throw new IllegalArgumentException("Biometric authentication has not been completed for " + authentication);
     }
     LOG.debug("Sending response for successful authentication {}", authentication);
     response.setStatus(200);

@@ -94,4 +94,17 @@ public class SAMLAuthenticationToken extends AbstractAuthenticationToken {
   public void setStatus(PollResponse status) {
     this.status = status;
   }
+
+  @Override
+  public String toString() {
+    return "SAMLAuthenticationToken{" +
+        "status=" + status +
+        ", biometricReponse=" + biometricReponse +
+        ", issuer='" + issuer + '\'' +
+        ", nameId='" + nameId + '\'' +
+        ", id='" + id + '\'' +
+        ", assertionConsumerServiceURL='" + assertionConsumerServiceURL + '\'' +
+        ", registration=" + registration +
+        '}';
+  }
 }
