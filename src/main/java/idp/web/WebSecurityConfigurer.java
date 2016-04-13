@@ -131,7 +131,7 @@ public class WebSecurityConfigurer {
   @Configuration
   @Order(1)
   public static class BioMetricConfiguration {
-    
+
     @Value("${biometric.api.key}")
     private String biometricApiKey;
 
