@@ -37,6 +37,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -52,6 +53,9 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfigurer {
+
+  @Value("${sa.metadata.url}")
+  private String saMetadataUrl;
 
   @Value("${sa.public.certificate}")
   private String saPublicCertificate;
@@ -98,7 +102,14 @@ public class WebSecurityConfigurer {
   @Bean
   @Autowired
   public SAMLMessageHandler samlMessageHandler(CredentialResolver credentialResolver) {
-    return new SAMLMessageHandler(credentialResolver, samlMessageDecoder(), samlMessageEncoder(), securityPolicyResolver(), biometricEntityId);
+    return new SAMLMessageHandler(
+        credentialResolver,
+        samlMessageDecoder(),
+        samlMessageEncoder(),
+        securityPolicyResolver(),
+        biometricEntityId,
+        saEntityId,
+        saMetadataUrl);
   }
 
   private SecurityPolicyResolver securityPolicyResolver() {
@@ -149,8 +160,6 @@ public class WebSecurityConfigurer {
     public BioMetric mockBioMetric() {
       return new MockBioMetric();
     }
-
-
   }
 
   @Configuration
@@ -167,6 +176,11 @@ public class WebSecurityConfigurer {
     private String saEntityId;
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+      web.ignoring().antMatchers("/health","/info", "/metadata");
+    }
+
+    @Override
     public void configure(HttpSecurity http) throws Exception {
       http
           .sessionManagement()
@@ -178,7 +192,6 @@ public class WebSecurityConfigurer {
               new SAMLAuthnFilter(authenticationManager(), samlMessageHandler),
               BasicAuthenticationFilter.class)
           .authorizeRequests()
-          .antMatchers("/health","/info").permitAll()
           .antMatchers("/**").hasRole("USER");
 
       if (environment.acceptsProfiles("dev")) {

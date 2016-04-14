@@ -6,7 +6,7 @@ var biometricTranslations = {
     'complete': 'Je Biometric account is gereed voor gebruik. Je gaat automatisch terug naar het Sterke Authenticatie overzicht'
   },
   'nl': {
-    'expired': '<p>Je Biometric sessie is verlopen.</p><p>Ververs de pagina voor een nieuwe QR code of annulleer het authenticeren om terug te gaan naar het Sterke Authenticatie overzicht.</p>',
+    'expired': '<p>Je Biometric sessie is verlopen.</p><p>Ververs de pagina voor een nieuwe QR code of annuleer het authenticeren om terug te gaan naar het Sterke Authenticatie overzicht.</p>',
     'complete': '<p>Your Biometric account is ready to use. You wil be automatically be redirected to the Strong Authentication overview<p>'
   }
 };
@@ -33,13 +33,16 @@ function pollStatus() {
         window.setTimeout(pollStatus, 1000);
         break;
       case 'complete':
-        $('#status').html(biometricTranslations[currentLocale][status]);
+        $('#status').html(biometricTranslations[currentLocale][data.status]);
         window.setTimeout(function () {
-          $.post('/done');
+          $( "#form" ).submit();
         }, 1000)
         break;
       case 'expired' :
-        $('#status').html(biometricTranslations[currentLocale][status]);
+        ['#countdown', '#timeleft', '#qrcode'].forEach(function(value){
+          $(value).hide();
+        });
+        $('#status').html(biometricTranslations[currentLocale][data.status]);
         break;
     }
   })

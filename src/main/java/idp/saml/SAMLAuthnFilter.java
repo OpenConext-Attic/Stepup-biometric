@@ -51,16 +51,10 @@ public class SAMLAuthnFilter extends OncePerRequestFilter {
       throw new RuntimeException(e);
     }
 
-    SAMLObject inboundSAMLMessage = messageContext.getInboundSAMLMessage();
-    if (!(inboundSAMLMessage instanceof AuthnRequest)) {
-      throw new RuntimeException("Expected inboundSAMLMessage to be AuthnRequest, but actual " + inboundSAMLMessage.getClass());
-    }
+    AuthnRequest authnRequest = (AuthnRequest) messageContext.getInboundSAMLMessage();
 
-    AuthnRequest authnRequest = (AuthnRequest) inboundSAMLMessage;
-
-    samlMessageHandler.validate(request, authnRequest);
-
-    Authentication authentication = authenticationManager.authenticate(new SAMLAuthenticationToken(authnRequest));
+    SAMLAuthenticationToken token = new SAMLAuthenticationToken(authnRequest, messageContext.getRelayState(), request.getRemoteAddr());
+    Authentication authentication = authenticationManager.authenticate(token);
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     chain.doFilter(request, response);

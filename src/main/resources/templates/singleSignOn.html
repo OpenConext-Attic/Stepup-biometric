@@ -35,17 +35,20 @@
                     <li th:text="#{biometric.scan_code}"></li>
                 </ul>
             </div>
-            <img class="qr" th:src="@{'data:image/jpeg;base64,'+${authentication.biometricReponse.qrCode}}"/>
+            <img id="qrcode" class="qr" th:src="@{'data:image/jpeg;base64,'+${authentication.biometricReponse.qrCode}}"/>
 
 
             <p th:utext="#{biometric.download}"></p>
 
             <div id="countdown"></div>
 
-            <p th:if="${authentication.registration}" th:text="#{biometric.time.registration}">Time left</p>
-            <p th:if="${!authentication.registration}" th:text="#{biometric.time.authentication}">Time left</p>
+            <div id="timeleft">
+                <p th:if="${authentication.registration}" th:text="#{biometric.time.registration}">Time left</p>
+                <p th:if="${!authentication.registration}" th:text="#{biometric.time.authentication}">Time left</p>
+            </div>
         </div>
 
+        <form id="form" action="/done" method="post"></form>
         <footer>
             <div class="row-fluid">
                 <div class="span8 offset2">

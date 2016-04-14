@@ -28,7 +28,7 @@ public class MockBioMetric implements BioMetric {
     int count = sessions.getOrDefault(sessionID, 0).intValue();
     if (count == 5) {
       sessions.remove(sessionID);
-      return PollResponse.complete;
+      return PollResponse.expired;
     } else {
       sessions.put(sessionID, count + 1);
       return PollResponse.pending;

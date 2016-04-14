@@ -3,6 +3,7 @@ package idp.saml;
 import idp.biometric.BioMetric;
 import idp.biometric.BioMetric.PollResponse;
 import idp.biometric.BioMetricAuthenticationProvider;
+import org.joda.time.DateTime;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.Subject;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -22,30 +23,38 @@ public class SAMLAuthenticationToken extends AbstractAuthenticationToken {
   private final String issuer;
   private final boolean registration;
   private final BioMetric.Response biometricReponse;
+  private final String relayState;
   private PollResponse status;
+  private final DateTime creationTime = new DateTime();
+  private final String clientIpAddress;
 
-  public SAMLAuthenticationToken(AuthnRequest authnRequest) {
+  public SAMLAuthenticationToken(AuthnRequest authnRequest, String relayState, String clientIpAddress) {
     super(AuthorityUtils.NO_AUTHORITIES);
     this.assertionConsumerServiceURL = authnRequest.getAssertionConsumerServiceURL();
+
     this.id = authnRequest.getID();
     Subject subject = authnRequest.getSubject();
     this.nameId = subject != null ? subject.getNameID().getValue() : null;
     this.issuer = authnRequest.getIssuer().getValue();
+    this.relayState = relayState;
     this.registration = nameId == null;
     this.biometricReponse = null;
     this.status = PollResponse.pending;
+    this.clientIpAddress = clientIpAddress;
   }
 
   public SAMLAuthenticationToken(SAMLAuthenticationToken token, BioMetric.Response response, Collection<? extends GrantedAuthority> authorities) {
     super(authorities);
     this.assertionConsumerServiceURL = token.assertionConsumerServiceURL;
     this.id = token.id;
-    this.nameId = token.nameId;
+    this.nameId = response.getUuid();
     this.issuer = token.issuer;
     this.registration = token.registration;
+    this.relayState = token.relayState;
     this.biometricReponse = response;
     setAuthenticated(true);
     this.status = PollResponse.pending;
+    this.clientIpAddress = token.clientIpAddress;
   }
 
   @Override
@@ -80,6 +89,18 @@ public class SAMLAuthenticationToken extends AbstractAuthenticationToken {
 
   public BioMetric.Response getBiometricReponse() {
     return biometricReponse;
+  }
+
+  public String getRelayState() {
+    return relayState;
+  }
+
+  public DateTime getCreationTime() {
+    return creationTime;
+  }
+
+  public String getClientIpAddress() {
+    return clientIpAddress;
   }
 
   public boolean isExpired() {
