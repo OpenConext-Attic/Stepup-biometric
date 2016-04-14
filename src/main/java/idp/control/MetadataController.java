@@ -23,12 +23,14 @@ import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureConstants;
 import org.opensaml.xml.signature.SignatureException;
 import org.opensaml.xml.signature.Signer;
+import org.opensaml.xml.util.XMLHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -111,19 +113,9 @@ public class MetadataController {
   }
 
   private String writeEntityDescriptor(EntityDescriptor entityDescriptor) throws ParserConfigurationException, MarshallingException, TransformerException {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document document = builder.newDocument();
-
-    Marshaller out = Configuration.getMarshallerFactory().getMarshaller(entityDescriptor);
-    out.marshall(entityDescriptor, document);
-
-    Transformer transformer = TransformerFactory.newInstance().newTransformer();
-    StringWriter stringWriter = new StringWriter();
-    StreamResult streamResult = new StreamResult(stringWriter);
-    DOMSource source = new DOMSource(document);
-    transformer.transform(source, streamResult);
-    return stringWriter.toString();
+    Marshaller marshaller = Configuration.getMarshallerFactory().getMarshaller(entityDescriptor);
+    Element element = marshaller.marshall(entityDescriptor);
+    return XMLHelper.nodeToString(element);
   }
 
 }

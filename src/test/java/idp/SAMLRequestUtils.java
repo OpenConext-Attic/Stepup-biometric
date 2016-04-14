@@ -14,7 +14,9 @@ import org.opensaml.xml.security.CriteriaSet;
 import org.opensaml.xml.security.SecurityException;
 import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.security.credential.CredentialResolver;
+import org.opensaml.xml.security.credential.UsageType;
 import org.opensaml.xml.security.criteria.EntityIDCriteria;
+import org.opensaml.xml.security.criteria.UsageCriteria;
 import org.opensaml.xml.signature.SignatureException;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -44,6 +46,7 @@ public class SAMLRequestUtils {
     authnRequest.setID(UUID.randomUUID().toString());
     authnRequest.setIssueInstant(new DateTime());
     authnRequest.setDestination(destination);
+    authnRequest.setAssertionConsumerServiceURL("http://localhost/acs");
 
     authnRequest.setIssuer(buildIssuer(entityName));
 
@@ -55,8 +58,6 @@ public class SAMLRequestUtils {
     Endpoint endpoint = buildSAMLObject(Endpoint.class, SingleSignOnService.DEFAULT_ELEMENT_NAME);
     endpoint.setLocation(destination);
 
-    Credential signingCredential = credentialResolver.resolveSingle(new CriteriaSet(new EntityIDCriteria(entityName)));
-
     MockHttpServletResponse response = new MockHttpServletResponse();
     HttpServletResponseAdapter outTransport = new HttpServletResponseAdapter(response, false);
 
@@ -67,6 +68,12 @@ public class SAMLRequestUtils {
     messageContext.setOutboundMessageTransport(outTransport);
     messageContext.setPeerEntityEndpoint(endpoint);
     messageContext.setOutboundSAMLMessage(authnRequest);
+
+    CriteriaSet criteriaSet = new CriteriaSet();
+    criteriaSet.add(new EntityIDCriteria(entityName));
+    criteriaSet.add(new UsageCriteria(UsageType.SIGNING));
+
+    Credential signingCredential = credentialResolver.resolveSingle(criteriaSet);
 
     messageContext.setOutboundSAMLMessageSigningCredential(signingCredential);
 

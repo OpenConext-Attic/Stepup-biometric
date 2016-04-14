@@ -161,11 +161,11 @@ public class SAMLMessageHandler {
     if (base64signature == null || sigAlg == null) {
       return;
     }
-    byte[] input = request.getQueryString().replaceFirst("Signature.*&", "").getBytes();
-    byte[] signature = Base64.decode(urlDecode(base64signature));
+    byte[] input = request.getQueryString().replaceFirst("&Signature[^&]+", "").getBytes();
+    byte[] signature = Base64.decode(base64signature);
 
     Credential credential = credential(issuer);
-    SigningUtil.verifyWithURI(credential, urlDecode(sigAlg), signature, input);
+    SigningUtil.verifyWithURI(credential, sigAlg, signature, input);
   }
 
   private void validateSignature(AuthnRequest authnRequest) throws ValidationException {
@@ -183,14 +183,6 @@ public class SAMLMessageHandler {
     try {
       return credentialResolver.resolveSingle(new CriteriaSet(new EntityIDCriteria(entityId)));
     } catch (SecurityException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private String urlDecode(String s) {
-    try {
-      return URLDecoder.decode(s, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
   }
