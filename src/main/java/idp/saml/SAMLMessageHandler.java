@@ -31,8 +31,6 @@ import org.opensaml.xml.validation.ValidatorSuite;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,7 +86,7 @@ public class SAMLMessageHandler {
   }
 
   public void sendAuthnResponse(SAMLAuthenticationToken token, HttpServletResponse response) throws MarshallingException, SignatureException, MessageEncodingException {
-    Credential signingCredential = credential(entityId);
+    Credential signingCredential = resolveCredential(entityId);
 
     Response authResponse = buildSAMLObject(Response.class, Response.DEFAULT_ELEMENT_NAME);
     Issuer issuer = buildIssuer(entityId);
@@ -137,7 +135,7 @@ public class SAMLMessageHandler {
     Signer.signObject(signature);
   }
 
-  public void validate(HttpServletRequest request, AuthnRequest authnRequest) {
+  private void validate(HttpServletRequest request, AuthnRequest authnRequest) {
     try {
       validateXMLObject(authnRequest);
       validateSignature(authnRequest);
@@ -146,7 +144,6 @@ public class SAMLMessageHandler {
       throw new RuntimeException(e);
     }
   }
-
 
   private void validateXMLObject(XMLObject xmlObject) throws ValidationException {
     //lambda is poor with Exceptions
@@ -164,7 +161,7 @@ public class SAMLMessageHandler {
     byte[] input = request.getQueryString().replaceFirst("&Signature[^&]+", "").getBytes();
     byte[] signature = Base64.decode(base64signature);
 
-    Credential credential = credential(issuer);
+    Credential credential = resolveCredential(issuer);
     SigningUtil.verifyWithURI(credential, sigAlg, signature, input);
   }
 
@@ -175,11 +172,11 @@ public class SAMLMessageHandler {
     }
     new SAMLSignatureProfileValidator().validate(signature);
     String issuer = authnRequest.getIssuer().getValue();
-    Credential credential = credential(issuer);
+    Credential credential = resolveCredential(issuer);
     new SignatureValidator(credential).validate(signature);
   }
 
-  private Credential credential(String entityId) {
+  private Credential resolveCredential(String entityId) {
     try {
       return credentialResolver.resolveSingle(new CriteriaSet(new EntityIDCriteria(entityId)));
     } catch (SecurityException e) {

@@ -1,7 +1,6 @@
 package idp.control;
 
 import idp.saml.SAMLBuilder;
-import idp.saml.SAMLMessageHandler;
 import org.joda.time.DateTime;
 import org.opensaml.Configuration;
 import org.opensaml.common.xml.SAMLConstants;
@@ -29,18 +28,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
 import java.util.UUID;
 
 import static idp.saml.SAMLBuilder.buildSAMLObject;
@@ -50,9 +41,6 @@ public class MetadataController {
 
   private String metadata;
   private DateTime validUntil;
-
-  @Autowired
-  private SAMLMessageHandler samlMessageHandler;
 
   @Autowired
   private CredentialResolver credentialResolver;

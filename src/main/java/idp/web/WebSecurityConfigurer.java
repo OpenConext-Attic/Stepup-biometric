@@ -47,9 +47,6 @@ import java.security.KeyStore;
 import java.util.Arrays;
 import java.util.Collections;
 
-/**
- *
- */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfigurer {

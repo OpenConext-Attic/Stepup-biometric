@@ -1,8 +1,9 @@
-package idp;
+package idp.control;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import idp.AbstractIntegrationTest;
 import idp.biometric.BioMetric;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
@@ -30,8 +31,7 @@ public class DevProfileTest extends AbstractIntegrationTest {
 
   @Test
   public void testMockAuthnRequest() throws Exception {
-    //We don't mock the Biometric endpoint, as we will hit both the MockSAMLAuthnFilter and MockBioMetric
-
+    //We don't mock the Biometric endpoint, as we will hit both the MockSAMLAuthnFilter and MockBioMetric because of dev-profile
     ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port, String.class);
     assertTrue(response.getBody().contains("<img id=\"qrcode\" class=\"qr\" src=\"data:image/jpeg;base64,"));
 
