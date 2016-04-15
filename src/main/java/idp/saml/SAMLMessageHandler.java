@@ -67,13 +67,17 @@ public class SAMLMessageHandler {
     this.validatorSuites = asList(getValidatorSuite("saml2-core-schema-validator"), getValidatorSuite("saml2-core-spec-validator"));
   }
 
-  public SAMLMessageContext extractSAMLMessageContext(HttpServletRequest request) throws SecurityException, MessageDecodingException {
+  public SAMLMessageContext extractSAMLMessageContext(HttpServletRequest request)  {
     BasicSAMLMessageContext messageContext = new BasicSAMLMessageContext();
 
     messageContext.setInboundMessageTransport(new HttpServletRequestAdapter(request));
     messageContext.setSecurityPolicyResolver(resolver);
 
-    decoder.decode(messageContext);
+    try {
+      decoder.decode(messageContext);
+    } catch (SecurityException | MessageDecodingException e) {
+      throw new RuntimeException(e);
+    }
 
     SAMLObject inboundSAMLMessage = messageContext.getInboundSAMLMessage();
     if (!(inboundSAMLMessage instanceof AuthnRequest)) {
@@ -81,11 +85,26 @@ public class SAMLMessageHandler {
     }
 
     AuthnRequest authnRequest = (AuthnRequest) inboundSAMLMessage;
-    validate(request, authnRequest);
+    try {
+      validate(request, authnRequest);
+    } catch (ValidationException | SecurityException e) {
+      throw new SAMLAuthenticationException("Exception during validation of AuthnRequest", e, messageContext);
+    }
     return messageContext;
   }
 
   public void sendAuthnResponse(SAMLAuthenticationToken token, HttpServletResponse response) throws MarshallingException, SignatureException, MessageEncodingException {
+    doSendAuthnResponse(token, response, buildStatus(StatusCode.SUCCESS_URI));
+  }
+
+  public void sendFailedAuthnResponse(SAMLAuthenticationException authenticationException, HttpServletRequest request, HttpServletResponse response ) throws MarshallingException, SignatureException, MessageEncodingException {
+    SAMLMessageContext messageContext = authenticationException.getMessageContext();
+    AuthnRequest authnRequest = (AuthnRequest) messageContext.getInboundSAMLMessage();
+    SAMLAuthenticationToken token = new SAMLAuthenticationToken(authnRequest, messageContext.getRelayState(), request.getRemoteAddr());
+    doSendAuthnResponse(token, response, buildStatus(StatusCode.RESPONDER_URI, StatusCode.AUTHN_FAILED_URI, authenticationException.getMessage()));
+  }
+
+  private void doSendAuthnResponse(SAMLAuthenticationToken token, HttpServletResponse response, Status status) throws MarshallingException, SignatureException, MessageEncodingException {
     Credential signingCredential = resolveCredential(entityId);
 
     Response authResponse = buildSAMLObject(Response.class, Response.DEFAULT_ELEMENT_NAME);
@@ -96,13 +115,13 @@ public class SAMLMessageHandler {
     authResponse.setIssueInstant(new DateTime());
     authResponse.setInResponseTo(token.getId());
 
-    Assertion assertion = buildAssertion(token, entityId, spEntityId, spMetaDataUrl);
+    Assertion assertion = buildAssertion(token, status, entityId, spMetaDataUrl);
     signAssertion(assertion, signingCredential);
 
     authResponse.getAssertions().add(assertion);
     authResponse.setDestination(token.getAssertionConsumerServiceURL());
 
-    authResponse.setStatus(buildStatus(StatusCode.SUCCESS_URI));
+    authResponse.setStatus(status);
 
     Endpoint endpoint = buildSAMLObject(Endpoint.class, SingleSignOnService.DEFAULT_ELEMENT_NAME);
     endpoint.setLocation(token.getAssertionConsumerServiceURL());
@@ -135,14 +154,10 @@ public class SAMLMessageHandler {
     Signer.signObject(signature);
   }
 
-  private void validate(HttpServletRequest request, AuthnRequest authnRequest) {
-    try {
+  private void validate(HttpServletRequest request, AuthnRequest authnRequest) throws ValidationException, SecurityException {
       validateXMLObject(authnRequest);
       validateSignature(authnRequest);
       validateRawSignature(request, authnRequest.getIssuer().getValue());
-    } catch (ValidationException | SecurityException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   private void validateXMLObject(XMLObject xmlObject) throws ValidationException {

@@ -105,7 +105,7 @@ public class SAMLAuthenticationToken extends AbstractAuthenticationToken {
 
   public boolean isExpired() {
     return biometricReponse != null &&
-        LocalDateTime.parse(biometricReponse.getExpirationTime(), formatter).isAfter(LocalDateTime.now());
+        LocalDateTime.parse(biometricReponse.getExpirationTime(), formatter).isBefore(LocalDateTime.now());
   }
 
   public PollResponse getStatus() {

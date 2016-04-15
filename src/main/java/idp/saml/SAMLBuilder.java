@@ -3,6 +3,9 @@ package idp.saml;
 import org.joda.time.DateTime;
 import org.opensaml.Configuration;
 import org.opensaml.saml2.core.*;
+import org.opensaml.saml2.core.impl.StatusBuilder;
+import org.opensaml.saml2.core.impl.StatusCodeBuilder;
+import org.opensaml.saml2.core.impl.StatusMessageBuilder;
 import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.schema.XSString;
 
@@ -64,9 +67,28 @@ public class SAMLBuilder {
     return status;
   }
 
-  public static Assertion buildAssertion(SAMLAuthenticationToken token, String entityId, String spEntityId, String spMetaDataUrl) {
+  public static Status buildStatus(String value, String subStatus, String message) {
+    Status status = buildStatus(value);
+
+    StatusCode subStatusCode = buildSAMLObject(StatusCode.class, StatusCode.DEFAULT_ELEMENT_NAME);
+    subStatusCode.setValue(subStatus);
+    status.getStatusCode().setStatusCode(subStatusCode);
+
+    StatusMessage statusMessage = buildSAMLObject(StatusMessage.class, StatusMessage.DEFAULT_ELEMENT_NAME);
+    statusMessage.setMessage(message);
+    status.setStatusMessage(statusMessage);
+
+    return status;
+  }
+
+  public static Assertion buildAssertion(SAMLAuthenticationToken token, Status status, String entityId, String spMetaDataUrl) {
     Assertion assertion = buildSAMLObject(Assertion.class, Assertion.DEFAULT_ELEMENT_NAME);
-    Subject subject = buildSubject(token.getNameId(), token.getAssertionConsumerServiceURL(), token.getId(), token.getClientIpAddress());
+
+    if (status.getStatusCode().equals(StatusCode.SUCCESS_URI)) {
+      Subject subject = buildSubject(token.getNameId(), token.getAssertionConsumerServiceURL(), token.getId(), token.getClientIpAddress());
+      assertion.setSubject(subject);
+    }
+
     Issuer issuer = buildIssuer(entityId);
 
     Audience audience = buildSAMLObject(Audience.class, Audience.DEFAULT_ELEMENT_NAME);
@@ -82,7 +104,6 @@ public class SAMLBuilder {
 
     assertion.setIssuer(issuer);
     assertion.getAuthnStatements().add(authnStatement);
-    assertion.setSubject(subject);
 
     Map<String, List<String>> attributes = singletonMap("urn:mace:dir:attribute-def:uid", singletonList(token.getNameId()));
     assertion.getAttributeStatements().add(buildAttributeStatement(attributes));

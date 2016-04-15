@@ -11,14 +11,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@WebIntegrationTest(value = {"server.port=0", "biometric.api.key=secret", "biometric.api.base.url=http://localhost:9000/"})
+@WebIntegrationTest(value = {"server.port=0"})
 public abstract class AbstractIntegrationTest {
 
   protected RestTemplate restTemplate = new TestRestTemplate();
@@ -41,6 +46,18 @@ public abstract class AbstractIntegrationTest {
   @Before
   public void before() throws IOException {
     samlRequestUtils = new SAMLRequestUtils(credentialResolver);
+  }
+
+  protected HttpHeaders buildCookieHeaders(ResponseEntity<?> response) {
+    List<String> cookies = response.getHeaders().get("Set-Cookie");
+    assertEquals(1, cookies.size());
+
+    //Something like JSESSIONID=j2qqhxkq9wfy1ngsqouvebxud;Path=/
+    String sessionId = cookies.get(0);
+
+    HttpHeaders requestHeaders = new HttpHeaders();
+    requestHeaders.add("Cookie", sessionId.replaceAll(";.*", ""));
+    return requestHeaders;
   }
 
 }

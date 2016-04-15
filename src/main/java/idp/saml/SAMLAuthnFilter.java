@@ -1,11 +1,7 @@
 package idp.saml;
 
-import org.opensaml.common.SAMLObject;
 import org.opensaml.common.binding.SAMLMessageContext;
 import org.opensaml.saml2.core.AuthnRequest;
-import org.opensaml.ws.message.decoder.MessageDecodingException;
-import org.opensaml.xml.security.SecurityException;
-import org.opensaml.xml.security.SigningUtil;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -31,25 +27,17 @@ public class SAMLAuthnFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
     if (!isSAMLRequest(request) || !authenticationIsRequired()) {
+      if (isExpired() && request.getHeader("X-POLLING") == null) {
+        Authentication authentication = authenticationManager.authenticate(SecurityContextHolder.getContext().getAuthentication());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+      }
       chain.doFilter(request, response);
       return;
     }
-    if (isExpired() && request.getHeader("X-POLLING") == null) {
-      Authentication authentication = authenticationManager.authenticate(SecurityContextHolder.getContext().getAuthentication());
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-      chain.doFilter(request, response);
-      return;
-    }
-
-    SAMLMessageContext messageContext;
-    try {
-      /*
-       * The SAMLRequest parameters are urlEncoded and the extraction expected unencoded parameters
-       */
-      messageContext = samlMessageHandler.extractSAMLMessageContext(new ParameterDecodingHttpServletRequestWrapper(request));
-    } catch (MessageDecodingException | SecurityException e) {
-      throw new RuntimeException(e);
-    }
+    /**
+     * The SAMLRequest parameters are urlEncoded and the extraction expects unencoded parameters
+     */
+    SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(new ParameterDecodingHttpServletRequestWrapper(request));
 
     AuthnRequest authnRequest = (AuthnRequest) messageContext.getInboundSAMLMessage();
 

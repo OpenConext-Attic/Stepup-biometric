@@ -35,6 +35,10 @@ public class MockBioMetric implements BioMetric {
     }
   }
 
+  public Map<String, Integer> getSessions() {
+    return sessions;
+  }
+
   private Response fromMap(Map<String, String> map) {
     return new Response(
         map.get("sessionID"),

@@ -83,18 +83,6 @@ public class SingleSignOnControllerTest extends AbstractIntegrationTest {
     assertEquals("pending", map.get("status"));
   }
 
-  private HttpHeaders buildCookieHeaders(ResponseEntity<?> response) {
-    List<String> cookies = response.getHeaders().get("Set-Cookie");
-    assertEquals(1, cookies.size());
-
-    //Something like JSESSIONID=j2qqhxkq9wfy1ngsqouvebxud;Path=/
-    String sessionId = cookies.get(0);
-
-    HttpHeaders requestHeaders = new HttpHeaders();
-    requestHeaders.add("Cookie", sessionId.replaceAll(";.*", ""));
-    return requestHeaders;
-  }
-
   private void stubBiometricRegistration() throws IOException {
     doMockBiometric("registration");
   }
