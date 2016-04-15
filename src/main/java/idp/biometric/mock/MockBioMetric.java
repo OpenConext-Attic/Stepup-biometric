@@ -26,7 +26,7 @@ public class MockBioMetric implements BioMetric {
   @Override
   public PollResponse poll(String sessionID, boolean isRegistration) {
     int count = sessions.getOrDefault(sessionID, 0).intValue();
-    if (count == 5) {
+    if (count == 25) {
       sessions.remove(sessionID);
       return PollResponse.complete;
     } else {
