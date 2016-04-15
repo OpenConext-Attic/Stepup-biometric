@@ -37,9 +37,14 @@ public class SingleSignOnController {
   @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/")
   public ModelAndView singleSignOn(Authentication authentication) {
     LOG.debug("SingleSignOn request for {}", authentication);
+
     Map<String, Object> model = new HashMap<>();
+
     model.put("authentication", authentication);
     model.put("sa_home", strongAuthenticationHome);
+    // otherwise the pie timer reset's when you change the language
+    model.put("accrued_time", System.currentTimeMillis() - ((SAMLAuthenticationToken) authentication).getCreationTime().getMillis());
+
     return new ModelAndView("singleSignOn", model);
   }
 

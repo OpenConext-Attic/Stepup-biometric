@@ -11,11 +11,14 @@ const biometricTranslations = {
   }
 };
 
+const accrued_time = $('input[name=accrued_time]').val();
+
 $('#countdown').pietimer({
-    seconds: 10 * 60,
+    seconds: 9.9 * 60,
     color: '#4DB3CF',
     height: 60,
-    width: 60
+    width: 60,
+    accrued_time: accrued_time
   },
   function () {
   });
