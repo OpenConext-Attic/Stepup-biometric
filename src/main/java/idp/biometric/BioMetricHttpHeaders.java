@@ -4,6 +4,9 @@ import org.springframework.http.HttpHeaders;
 
 public class BioMetricHttpHeaders extends HttpHeaders {
 
+  public BioMetricHttpHeaders() {
+  }
+
   public BioMetricHttpHeaders(String apiKey) {
     super();
     this.add(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -12,8 +15,9 @@ public class BioMetricHttpHeaders extends HttpHeaders {
   }
 
   public BioMetricHttpHeaders sessionHeader(String sessionID) {
-    BioMetricHttpHeaders copy = new BioMetricHttpHeaders(this.get("apiKey").get(0));
-    copy.set("sessionid", sessionID);
+    BioMetricHttpHeaders copy = new BioMetricHttpHeaders();
+    copy.setAll(this.toSingleValueMap());
+    copy.add("sessionid", sessionID);
     return copy;
   }
 }

@@ -38,7 +38,7 @@ public class SAMLRequestUtils {
   }
 
   /*
-   * The OpenSaml API is very verbose..
+   * The OpenSAML API is very verbose..
    */
   @SuppressWarnings("unchecked")
   public String redirectUrl(String entityName, String destination, Optional<String> userId) throws SecurityException, MessageEncodingException, SignatureException, MarshallingException, UnknownHostException {

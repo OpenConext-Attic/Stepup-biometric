@@ -1,9 +1,9 @@
 # OpenConext-biometric-idp
 
-[![Build Status](https://travis-ci.org/oharsta/OpenConext-biometric-idp.svg)](https://travis-ci.org/oharsta/OpenConext-biometric-idp)
-[![codecov.io](https://codecov.io/github/oharsta/OpenConext-biometric-idp/coverage.svg)](https://codecov.io/github/oharsta/OpenConext-biometric-idp)
+[![Build Status](https://travis-ci.org/SURFnet/stepup-biometric.svg)](https://travis-ci.org/SURFnet/stepup-biometric)
+[![codecov.io](https://codecov.io/github/SURFnet/stepup-biometric/coverage.svg)](https://codecov.io/github/SURFnet/stepup-biometric)
 
-OpenConext Biometric Idp
+SURFnet stepup-biometric
 
 ## [Getting started](#getting-started)
 
