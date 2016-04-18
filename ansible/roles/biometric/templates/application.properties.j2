@@ -1,0 +1,29 @@
+logging.config=file://{{ biometric_idp_dir }}/logback.xml
+server.port={{ springapp_tcpport }}
+
+# Anything other then dev is ok
+spring.profiles.active=test
+
+# The overview url of the Strong Authentication website
+sa.home={{ biometric_idp.sa_sp_home_url }}https://sa.test.surfconext.nl/overview
+# The url of the metadata of the Strong Authentication SP
+sa.metadata.url={{ biometric_idp.sa_sp_metadata_url }}https://sa-gw.test.surfconext.nl/gssp/tiqr/metadata
+
+# Public certificate to verify the signature of the SAML request
+sa.public.certificate={{ biometric_idp.sa_sp_certificate }}
+# The entity ID of the Strong Authentication SP. It MUST equal the SAML issuer in the AuthnRequest
+sa.entity.id={{ biometric_idp.sa_sp_entity_id }}
+
+# Entity ID of the biometric IDP
+biometric.entity.id={{ biometric_idp.entity_id }}
+# Private key used to sign the SAML response
+biometric.private.key={{ biometric_idp_private_key | vault }}
+# Public certificate to verify the signature of the SAML response
+biometric.public.certificate={{ biometric_idp.certificate }}
+# Passphrase of the keystore
+biometric.passphrase=secret
+
+# The API Key of the remote Biometric API
+biometric.api.key={{ biometric_api_key | vault }}
+# The base URL of the remote Biometric API. Ensure a trailing slash
+biometric.api.base.url={{ biometric_idp.api_base_url }}

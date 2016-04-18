@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.openconext</groupId>
-  <artifactId>biometric-idp</artifactId>
+  <groupId>org.surfnet</groupId>
+  <artifactId>biometric</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>biometric-idp</name>
-  <description>Biometric IdP</description>
+  <name>biometric</name>
+  <description>Biometric Step-up IdP</description>
 
   <parent>
     <groupId>org.springframework.boot</groupId>

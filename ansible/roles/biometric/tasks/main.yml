@@ -1,0 +1,120 @@
+---
+
+- name: install libhttp2 (needed by uri module)
+  pip: name=httplib2 state=present
+
+- name: create application group
+  group: name=biometric state=present
+
+- name: create appplication user
+  user:
+    name: "{{ biometric_user }}"
+    group: "{{ biometric_group }}"
+    home: "{{ biometric_dir }}"
+    shell: /sbin/nologin
+
+- name: create logging directory
+  file:
+    path: /var/log/biometric
+    state: directory
+    owner: "{{ biometric_user }}"
+    group: "{{ biometric_group }}"
+    mode: 0755
+
+- name: copy logging config
+  template:
+    src: logback.xml.j2
+    dest: "{{ biometric_dir }}/logback.xml"
+    owner: "{{ biometric_user }}"
+    group: "{{ biometric_group }}"
+    mode: 0640
+  tags: deploy
+  notify: restart biometric
+
+- name: copy application properties
+  template:
+    src: application.properties.j2
+    dest: "{{ biometric_dir }}/application.properties"
+    owner: "{{ biometric_user }}"
+    group: "{{ biometric_group }}"
+    mode: 0400
+  tags: deploy
+  notify: restart biometric
+
+- name: copy application config
+  template:
+    src: biometric.conf.j2
+    dest: "{{ biometric_dir }}/biometric.conf"
+    owner: root
+    group: root
+    mode: 0400
+  tags: deploy
+  notify: restart biometric
+
+- name: download biometric.war
+  maven_artifact:
+    group_id: " {{ biometric_group_id }}"
+    artifact_id: biometric
+    extension: war
+    version: "{{ biometric_version }}"
+    repository_url: "{{ maven_snapshot_repo if 'SNAPSHOT' in dashboard_version else maven_repo }}"
+    dest: "{{ biometric_dir }}"
+  tags: deploy
+  register: maven_result
+
+- name: set ownership of application artifact
+  file: path={{ maven_result.dest }} owner={{ biometric_user }} group={{ biometric_group }} mode=0500
+  tags: deploy
+
+- name: change symlink to current version
+  file:
+    src: "{{ maven_result.dest }}"
+    dest: "{{ biometric_dir }}/biometric.war"
+    state: link
+    owner: "{{ biometric_user }}"
+    group: "{{ biometric_group }}"
+  tags: deploy
+  when: maven_result.changed
+
+- name: link application config
+  file:
+    src: "{{ biometric_dir }}/biometric.conf"
+    dest: "{{ biometric_dir }}/biometric-{{ maven_result.version }}.conf"
+    state: link
+  when: maven_result.changed
+  tags: deploy
+
+- name: link init.d service
+  file:
+    src: "{{ biometric_dir }}/biometric.war"
+    dest: /etc/init.d/biometric
+    force: yes
+    state: link
+  tags: deploy
+
+- name: restart biometric
+  service: name=biometric state=restarted
+  tags: deploy
+  when: maven_result.changed
+
+- name: wait for restart
+  uri: url=http://localhost:{{ server_port }}/health
+  tags: deploy
+  register: health_result
+  until: health_result.status is defined and health_result.status == 200 and health_result.json.status == "UP"
+  retries: 12
+  delay: 5
+  when: maven_result.changed
+
+#- name: cleanup old artifacts
+#  command: find . ! -name {{ artifact }} -name '*.war -type f -exec rm {} \; chdir={{ biometric_dir }}
+#  tags: deploy
+#  when: maven_result.changed
+
+- name: copy virtual host config
+  template: src=httpd/biometric.conf.j2 dest=/etc/httpd/conf.d/biometric.conf
+  tags: deploy
+  notify: reload httpd
+
+- name: ensure the service is started
+  service: name=biometric enabled=yes state=started

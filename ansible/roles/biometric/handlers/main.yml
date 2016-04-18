@@ -1,0 +1,3 @@
+---
+- name: restart biometric
+  service: name=biometric state=restarted

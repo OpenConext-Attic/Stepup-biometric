@@ -1,0 +1,10 @@
+---
+- hosts: biometric
+  become: true
+  gather_facts: yes
+  roles:
+    - initial
+    - { role: httpd, tags: httpd }
+    - { role: java, tags: java }
+    - ssl
+    - { role: biometric, tags: biometric }
