@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/SURFnet/stepup-biometric.svg)](https://travis-ci.org/SURFnet/stepup-biometric)
 [![codecov.io](https://codecov.io/github/SURFnet/stepup-biometric/coverage.svg)](https://codecov.io/github/SURFnet/stepup-biometric)
 
-SURFnet stepup-biometric
+SURFnet stepup-biometric IdP
 
 ## [Getting started](#getting-started)
 
