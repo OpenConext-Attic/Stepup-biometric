@@ -105,7 +105,6 @@ public class WebSecurityConfigurer {
         samlMessageEncoder(),
         securityPolicyResolver(),
         biometricEntityId,
-        saEntityId,
         saMetadataUrl);
   }
 

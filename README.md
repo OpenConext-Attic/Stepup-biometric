@@ -36,12 +36,12 @@ The biometric IdP publishes its [metadata](http://localhost:8080/metadata).
 
 ### [Deployment](#deployment)
 
-We use Ansible for deployment. See the inline documentation of [application.properties](src/main/resources/application.properties) for all the environment dependend variables.
+We use Ansible for the deployment. See the inline documentation of [application.properties](src/main/resources/application.properties) for all the environment dependend variables. The
+Ansible files are located in the [ansible folder](ansible).
 
 #### [Install Ansible](#install_ansible)
 
-Ansible is the configuration tool we use to describe our servers. To
-install for development (version must be >= 2.0):
+To install Ansible (version must be >= 2.0) for deployment of the Biometric IdP:
 
 ```bash
 brew install python
@@ -52,8 +52,7 @@ brew install ansible
 pip install python-keyczar==0.71c
 ```
 
-This playbook uses a custom vault, defined in filter_plugins/custom_plugins.py in order to encrypt data. We think this is a better solution than the ansible-vault because it allows us to do fine grained encryption instead of a big ansible-vault file.
-Also, the creator of ansible-vault admits his solution is not the way to go. See [this blogpost](http://jpmens.net/2014/02/22/my-thoughts-on-ansible-s-vault/).
+This playbook uses a custom vault, defined in filter_plugins/custom_plugins.py in order to encrypt data. 
 
 Retrieve the surfconext-ansible-keystore from a colleague and put it on an encrypted disk partition, to keep it safe even in case of laptop-loss. Here's how to [create an encrypted folder](http://apple.stackexchange.com/questions/129720/how-can-i-encrypt-a-folder-in-os-x-mavericks) on your Mac.
 

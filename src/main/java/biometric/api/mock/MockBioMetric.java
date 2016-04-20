@@ -1,13 +1,14 @@
 package biometric.api.mock;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import biometric.api.BioMetric;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class MockBioMetric implements BioMetric {
 
   private ObjectMapper objectMapper = new ObjectMapper();
@@ -25,7 +26,7 @@ public class MockBioMetric implements BioMetric {
 
   @Override
   public PollResponse poll(String sessionID, boolean isRegistration) {
-    int count = sessions.getOrDefault(sessionID, 0).intValue();
+    int count = sessions.getOrDefault(sessionID, 0);
     if (count == 25) {
       sessions.remove(sessionID);
       return PollResponse.complete;

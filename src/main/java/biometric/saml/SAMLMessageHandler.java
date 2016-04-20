@@ -45,7 +45,6 @@ public class SAMLMessageHandler {
   private final SAMLMessageDecoder decoder;
   private final SecurityPolicyResolver resolver;
   private final String entityId;
-  private final String spEntityId;
   private final String spMetaDataUrl;
 
   private final List<ValidatorSuite> validatorSuites;
@@ -55,14 +54,12 @@ public class SAMLMessageHandler {
                             SAMLMessageEncoder samlMessageEncoder,
                             SecurityPolicyResolver securityPolicyResolver,
                             String entityId,
-                            String spEntityId,
                             String spMetaDataUrl) {
     this.credentialResolver = credentialResolver;
     this.encoder = samlMessageEncoder;
     this.decoder = samlMessageDecoder;
     this.resolver = securityPolicyResolver;
     this.entityId = entityId;
-    this.spEntityId = spEntityId;
     this.spMetaDataUrl = spMetaDataUrl;
     this.validatorSuites = asList(getValidatorSuite("saml2-core-schema-validator"), getValidatorSuite("saml2-core-spec-validator"));
   }
