@@ -53,11 +53,10 @@
 
 - name: download biometric.jar
   maven_artifact:
-    group_id: org.surfnet
-    artifact_id: biometric
+    group_id: "{{ biometric_group_id }}"
+    artifact_id: "{{ biometric_artifact }}"
     version: "{{ biometric_version }}"
     repository_url: "{{ maven_snapshot_repo if 'SNAPSHOT' in biometric_version else maven_repo }}"
-#    repository_url: https://build.surfconext.nl/repository/public/snapshots
     dest: "{{ biometric_dir }}"
   tags: deploy
   register: maven_result
