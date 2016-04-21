@@ -1,5 +1,5 @@
-logging.config=file://{{ biometric_idp_dir }}/logback.xml
-server.port={{ springapp_tcpport }}
+logging.config=file://{{ biometric_dir }}/logback.xml
+server.port={{ biometric_port }}
 
 # Anything other then dev is ok
 spring.profiles.active=test
@@ -17,13 +17,13 @@ sa.entity.id={{ biometric_idp.sa_sp_entity_id }}
 # Entity ID of the biometric IDP
 biometric.entity.id={{ biometric_idp.entity_id }}
 # Private key used to sign the SAML response
-biometric.private.key={{ biometric_idp_private_key | vault }}
+biometric.private.key={{ biometric_idp.private_key | vault }}
 # Public certificate to verify the signature of the SAML response
 biometric.public.certificate={{ biometric_idp.certificate }}
 # Passphrase of the keystore
 biometric.passphrase=secret
 
 # The API Key of the remote Biometric API
-biometric.api.key={{ biometric_api_key | vault }}
+biometric.api.key={{ biometric_idp.api_key | vault }}
 # The base URL of the remote Biometric API. Ensure a trailing slash
 biometric.api.base.url={{ biometric_idp.api_base_url }}

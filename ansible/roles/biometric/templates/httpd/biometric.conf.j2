@@ -25,12 +25,7 @@
     CustomLog logs/ssl_request_log \
               "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 
-    ProxyPass / http://localhost:{{ server_port }}/ retry=0
-    ProxyPassReverse / http://localhost:{{ server_port }}/ retry=0
-
-    <Location ~ "/*">
-      allow from all
-      satisfy any
-    </Location>
+    ProxyPass / http://localhost:{{ biometric_port }}/ retry=0
+    ProxyPassReverse / http://localhost:{{ biometric_port }}/ retry=0
 
 </VirtualHost>

@@ -82,6 +82,11 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4.7</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -100,6 +105,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <excludeDevtools>true</excludeDevtools>
+          <executable>true</executable>
         </configuration>
       </plugin>
       <plugin>

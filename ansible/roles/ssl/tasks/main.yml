@@ -7,10 +7,8 @@
     - ca_bundle.pem
   notify:
     - restart httpd
-    - restart tomcat
 
-- name: https private key
-  copy: dest=/etc/httpd/keys/private.key content="{{ ssl_private_key | vault }}" owner=root group=root mode=0600
-  notify:
-    - restart httpd
-    - restart tomcat
+#- name: https private key
+#  copy: dest=/etc/httpd/keys/private.key content="{{ ssl_private_key | vault }}" owner=root group=root mode=0600
+#  notify:
+#    - restart httpd

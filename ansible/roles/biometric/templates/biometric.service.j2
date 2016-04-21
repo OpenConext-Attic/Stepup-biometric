@@ -1,0 +1,11 @@
+[Unit]
+Description=biometric
+After=network-online.target
+
+[Service]
+User=biometric
+ExecStart=/opt/biometric/biometric.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

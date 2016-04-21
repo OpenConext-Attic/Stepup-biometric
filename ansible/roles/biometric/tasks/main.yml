@@ -51,13 +51,13 @@
   tags: deploy
   notify: restart biometric
 
-- name: download biometric.war
+- name: download biometric.jar
   maven_artifact:
-    group_id: " {{ biometric_group_id }}"
+    group_id: org.surfnet
     artifact_id: biometric
-    extension: war
     version: "{{ biometric_version }}"
-    repository_url: "{{ maven_snapshot_repo if 'SNAPSHOT' in dashboard_version else maven_repo }}"
+    repository_url: "{{ maven_snapshot_repo if 'SNAPSHOT' in biometric_version else maven_repo }}"
+#    repository_url: https://build.surfconext.nl/repository/public/snapshots
     dest: "{{ biometric_dir }}"
   tags: deploy
   register: maven_result
@@ -69,7 +69,7 @@
 - name: change symlink to current version
   file:
     src: "{{ maven_result.dest }}"
-    dest: "{{ biometric_dir }}/biometric.war"
+    dest: "{{ biometric_dir }}/biometric.jar"
     state: link
     owner: "{{ biometric_user }}"
     group: "{{ biometric_group }}"
@@ -84,12 +84,13 @@
   when: maven_result.changed
   tags: deploy
 
-- name: link init.d service
-  file:
-    src: "{{ biometric_dir }}/biometric.war"
-    dest: /etc/init.d/biometric
-    force: yes
-    state: link
+- name: create systemd service
+  template:
+    src: biometric.service.j2
+    dest: /etc/systemd/system/biometric.service
+    owner: root
+    group: root
+    mode: 0400
   tags: deploy
 
 - name: restart biometric
@@ -98,7 +99,7 @@
   when: maven_result.changed
 
 - name: wait for restart
-  uri: url=http://localhost:{{ server_port }}/health
+  uri: url=http://localhost:{{ biometric_port }}/health
   tags: deploy
   register: health_result
   until: health_result.status is defined and health_result.status == 200 and health_result.json.status == "UP"
@@ -107,7 +108,7 @@
   when: maven_result.changed
 
 #- name: cleanup old artifacts
-#  command: find . ! -name {{ artifact }} -name '*.war -type f -exec rm {} \; chdir={{ biometric_dir }}
+#  command: find . ! -name {{ artifact }} -name '*.jar -type f -exec rm {} \; chdir={{ biometric_dir }}
 #  tags: deploy
 #  when: maven_result.changed
 

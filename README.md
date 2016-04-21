@@ -52,7 +52,7 @@ brew install ansible
 pip install python-keyczar==0.71c
 ```
 
-This playbook uses a custom vault, defined in filter_plugins/custom_plugins.py in order to encrypt data. 
+This playbook uses a custom vault, defined in filter_plugins/custom_plugins.py in order to encrypt data.
 
 Retrieve the surfconext-ansible-keystore from a colleague and put it on an encrypted disk partition, to keep it safe even in case of laptop-loss. Here's how to [create an encrypted folder](http://apple.stackexchange.com/questions/129720/how-can-i-encrypt-a-folder-in-os-x-mavericks) on your Mac.
 

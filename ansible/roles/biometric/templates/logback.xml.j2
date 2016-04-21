@@ -26,13 +26,12 @@
     </filter>
   </appender>
 
-  {% for logger in selfservice_loggers %}
+  {% for logger in biometric_loggers %}
   <logger name="{{ logger.name }}" level="{{ logger.level }}"/>
   {% endfor %}
 
   <root level="WARN">
     <appender-ref ref="EMAIL" />
     <appender-ref ref="FILE" />
-    <appender-ref ref="SYSLOG" />
   </root>
 </configuration>

@@ -1,12 +1,9 @@
 ---
 biometric_dir: /opt/biometric
 biometric_group_id: org.surfnet
-biometric_artifact: biometric.war
 biometric_heapsize: 512m
 biometric_port: 9290
-biometric_debug_port: 1290
 biometric_user: biometric
 biometric_group: biometric
-biometric_debug: False
 biometric_loggers:
   - { name: "biometric", level: "DEBUG" }

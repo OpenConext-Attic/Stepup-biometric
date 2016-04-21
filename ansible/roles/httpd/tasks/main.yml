@@ -17,7 +17,7 @@
     - DigiCertCA.crt
 
 - name: copy the private key for ssl
-  copy: content="{{ lookup('file', env_name + '/biometric_surfconext_nl_key.encrypted') | vault }}" dest=/etc/httpd/keys/biometric_surfconext_nl.key owner=root group=root mode=0600
+  copy: content="{{ lookup('file', env_name + '/biometric_surfconext_nl.key.encrypted') | vault }}" dest=/etc/httpd/keys/biometric_surfconext_nl.key owner=root group=root mode=0600
 
 - name: copy default config files
   copy: src={{ item }} dest=/etc/httpd/conf.d/{{ item }}
