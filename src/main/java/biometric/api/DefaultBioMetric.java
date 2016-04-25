@@ -4,6 +4,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class DefaultBioMetric implements BioMetric {
 
   @Override
   public Response authenticate(String uuid) {
-    return doGetResponse(singletonMap("biometric", "face"), false, uuid);
+    return doGetResponse(singletonMap("extraValues", singletonMap("loginMode", "qr")), false, uuid);
   }
 
   @Override
@@ -46,8 +47,10 @@ public class DefaultBioMetric implements BioMetric {
     }
   }
 
-  private Response doGetResponse(Map<String, String> body, boolean isRegistration, String uuid) {
-    HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(body, httpHeaders);
+  private Response doGetResponse(Map<String, Object> bodyArg, boolean isRegistration, String uuid) {
+    Map<String, Object> body = new HashMap<>(bodyArg);
+    body.put("timeout", 300);
+    HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, httpHeaders);
     String action = isRegistration ? "registration" : "authentication";
     Map<String, String> result = restTemplate.exchange(biometricApiBaseUrl + action + "/create", HttpMethod.POST, requestEntity, Map.class).getBody();
     return new Response(
