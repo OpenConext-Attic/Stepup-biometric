@@ -8,3 +8,4 @@ biometric_user: biometric
 biometric_group: biometric
 biometric_loggers:
   - { name: "biometric", level: "DEBUG" }
+  - { name: "org.springframework", level: "DEBUG" }

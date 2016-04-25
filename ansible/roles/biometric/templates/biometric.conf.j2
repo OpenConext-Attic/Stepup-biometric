@@ -1,3 +1,4 @@
 JAVA_OPTS="-Xms{{ biometric_heapsize }} -Xmx{{ biometric_heapsize }}"
 LOG_FOLDER=/var/log/biometric
 JAVA_HOME=/usr/lib/jvm/java-1.8.0
+RUN_ARGS="-Djava.security.egd=file:/dev/./urandom"
