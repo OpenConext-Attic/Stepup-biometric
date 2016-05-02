@@ -59,7 +59,7 @@ public class MetadataController {
   private String generateMetadata() throws SecurityException, SignatureException, MarshallingException, ParserConfigurationException, TransformerException {
     this.validUntil = new DateTime().plusDays(1);
 
-    EntityDescriptor entityDescriptor = SAMLBuilder.buildSAMLObject(EntityDescriptor.class, EntityDescriptor.DEFAULT_ELEMENT_NAME);
+    EntityDescriptor entityDescriptor = buildSAMLObject(EntityDescriptor.class, EntityDescriptor.DEFAULT_ELEMENT_NAME);
     entityDescriptor.setEntityID(biometricEntityId);
     entityDescriptor.setID(UUID.randomUUID().toString());
     entityDescriptor.setValidUntil(this.validUntil);
@@ -76,9 +76,9 @@ public class MetadataController {
     Configuration.getMarshallerFactory().getMarshaller(entityDescriptor).marshall(entityDescriptor);
     Signer.signObject(signature);
 
-    IDPSSODescriptor idpssoDescriptor = SAMLBuilder.buildSAMLObject(IDPSSODescriptor.class, IDPSSODescriptor.DEFAULT_ELEMENT_NAME);
+    IDPSSODescriptor idpssoDescriptor = buildSAMLObject(IDPSSODescriptor.class, IDPSSODescriptor.DEFAULT_ELEMENT_NAME);
 
-    NameIDFormat nameIDFormat = SAMLBuilder.buildSAMLObject(NameIDFormat.class, NameIDFormat.DEFAULT_ELEMENT_NAME);
+    NameIDFormat nameIDFormat = buildSAMLObject(NameIDFormat.class, NameIDFormat.DEFAULT_ELEMENT_NAME);
     nameIDFormat.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:persistent");
     idpssoDescriptor.getNameIDFormats().add(nameIDFormat);
 
